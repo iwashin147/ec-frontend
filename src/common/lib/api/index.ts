@@ -24,7 +24,7 @@ export const apiClient: ApiClient = createApiClient({
     } else {
       console.error(
         `[API] Request Failure: ${path} (${duration}ms)`,
-        result.error
+        result.error,
       );
     }
   },

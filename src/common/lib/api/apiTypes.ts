@@ -11,7 +11,7 @@ export class ApiError extends Error {
   constructor(
     public readonly statusCode: StatusCodes,
     public readonly message: string,
-    public readonly details?: unknown
+    public readonly details?: unknown,
   ) {
     super(message);
     this.name = 'ApiError';
@@ -48,12 +48,12 @@ export interface ApiClient {
   post<T>(
     path: string,
     body: unknown,
-    options?: RequestInit
+    options?: RequestInit,
   ): Promise<Result<T>>;
   put<T>(
     path: string,
     body: unknown,
-    options?: RequestInit
+    options?: RequestInit,
   ): Promise<Result<T>>;
 }
 
@@ -111,7 +111,7 @@ export type ApiClientConfig = {
   onRequestEnd?: (
     path: string,
     duration: number,
-    result: Result<unknown>
+    result: Result<unknown>,
   ) => void;
   /** リクエスト開始時に呼び出されるコールバック。ロギングなどに使用。 */
   onRequestStart?: (path: string) => void;
