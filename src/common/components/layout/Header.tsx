@@ -1,4 +1,3 @@
-import NextLink from 'next/link';
 import {
   AppBar,
   Toolbar,
@@ -8,6 +7,7 @@ import {
   IconButton,
 } from '@mui/material';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import Link from '@/common/components/ui/input/Link';
 
 export default function Header() {
   return (
@@ -22,7 +22,7 @@ export default function Header() {
       <Toolbar>
         <Typography
           variant="h6"
-          component={NextLink} // Next.jsのLinkとして機能させる
+          component={Link}
           href="/"
           sx={{
             flexGrow: 1,
@@ -34,14 +34,14 @@ export default function Header() {
         </Typography>
 
         <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
-          <Button component={NextLink} href="/products" color="inherit">
+          <Button component={Link} href="/products" color="inherit">
             商品
           </Button>
-          <Button component={NextLink} href="/login" color="inherit">
+          <Button component={Link} href="/login" color="inherit">
             ログイン
           </Button>
         </Box>
-        <IconButton component={NextLink} href="/cart" color="inherit">
+        <IconButton component={Link} href="/cart" color="inherit">
           <ShoppingCartIcon />
         </IconButton>
       </Toolbar>

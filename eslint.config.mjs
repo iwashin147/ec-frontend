@@ -14,10 +14,33 @@ const compat = new FlatCompat({
 
 const eslintConfig = [
   {
-    ignores: ['.next/', 'node_modules/', 'dist/', 'build/'],
+    ignores: [
+      '.next/',
+      'node_modules/',
+      'dist/',
+      'build/',
+      'prettier.config.js',
+    ],
   },
   {
     files: ['**/*.ts', '**/*.tsx', '**/*.js'],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          name: 'next/link',
+          importNames: ['default'],
+          message:
+            '衝突を避けるため、\'import NextLink from "next/link"\' を使用してください。',
+        },
+        {
+          name: '@mui/material',
+          importNames: ['Link'],
+          message:
+            '衝突を避けるため、\'import { Link as MuiLink } from "@mui/material"\' を使用してください。',
+        },
+      ],
+    },
     languageOptions: {
       ecmaVersion: 2023,
       parserOptions: {

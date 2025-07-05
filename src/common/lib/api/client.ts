@@ -73,7 +73,7 @@ export function createApiClient({
       const error = new ApiError(
         response.status,
         `HTTP error! status: ${response.status}`,
-        details
+        details,
       );
       await onHttpError?.(error);
       return { ok: false, error };
@@ -97,7 +97,7 @@ export function createApiClient({
         error: new ApiError(
           StatusCodes.REQUEST_TIMEOUT,
           'Request Aborted',
-          error
+          error,
         ),
       };
     }
@@ -106,11 +106,11 @@ export function createApiClient({
         ? new ApiError(
             StatusCodes.INTERNAL_SERVER_ERROR,
             error.message,
-            error.stack
+            error.stack,
           )
         : new ApiError(
             StatusCodes.INTERNAL_SERVER_ERROR,
-            'An unknown network error occurred'
+            'An unknown network error occurred',
           );
     await onHttpError?.(apiError);
     return { ok: false, error: apiError };
@@ -126,7 +126,7 @@ export function createApiClient({
    */
   const executeRequest = async <T>(
     path: string,
-    options: RequestInit
+    options: RequestInit,
   ): Promise<Result<T>> => {
     const retryConfig: Required<RetryConfig> = {
       count: defaultRetry?.count ?? 0,
@@ -221,7 +221,7 @@ export function createApiClient({
       ok: false,
       error: new ApiError(
         StatusCodes.INTERNAL_SERVER_ERROR,
-        'Retry logic failed unexpectedly'
+        'Retry logic failed unexpectedly',
       ),
     };
   };
@@ -236,7 +236,7 @@ export function createApiClient({
    */
   const request = async <T>(
     path: string,
-    options: RequestInit
+    options: RequestInit,
   ): Promise<Result<T>> => {
     const startTime = Date.now();
     onRequestStart?.(path); // リクエスト開始フックを呼び出す
