@@ -1,14 +1,33 @@
+import { dirname } from 'path';
+import { fileURLToPath } from 'url';
+import { FlatCompat } from '@eslint/eslintrc';
 import nextPlugin from '@next/eslint-plugin-next';
-import prettierPlugin from 'eslint-config-prettier';
-import globals from 'globals';
+import eslintConfigPrettier from 'eslint-config-prettier';
+import perfectionistPlugin from 'eslint-plugin-perfectionist';
 
-/** @type {import('eslint').Linter.Config[]} */
-const config = [
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+const compat = new FlatCompat({
+  baseDirectory: __dirname,
+});
+
+const eslintConfig = [
   {
-    ignores: ['.next/'],
+    ignores: ['.next/', 'node_modules/', 'dist/', 'build/'],
   },
   {
-    files: ['**/*.{js,mjs,cjs,jsx,mjsx,ts,mts,tsx,mtsx}'],
+    files: ['**/*.ts', '**/*.tsx', '**/*.js'],
+    languageOptions: {
+      ecmaVersion: 2023,
+      parserOptions: {
+        projectService: true,
+        tsconfigRootDir: __dirname,
+      },
+    },
+  },
+  {
+    name: 'next/core-web-vitals',
     plugins: {
       '@next/next': nextPlugin,
     },
@@ -16,14 +35,16 @@ const config = [
       ...nextPlugin.configs.recommended.rules,
       ...nextPlugin.configs['core-web-vitals'].rules,
     },
-    languageOptions: {
-      globals: {
-        ...globals.browser,
-        ...globals.node,
-      },
+  },
+  ...compat.extends('next/typescript'),
+  {
+    plugins: { perfectionist: perfectionistPlugin },
+    rules: {
+      'perfectionist/sort-interfaces': 'warn',
+      'perfectionist/sort-object-types': 'warn',
     },
   },
-  prettierPlugin,
+  eslintConfigPrettier,
 ];
 
-export default config;
+export default eslintConfig;
