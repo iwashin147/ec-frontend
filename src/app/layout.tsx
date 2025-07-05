@@ -25,6 +25,8 @@ export default async function RootLayout({
   params: Promise<{ locale: string }>;
 }>) {
   const { locale } = await params;
+  const a = "aaaa";
+  console.log(a);
   return (
     <html lang={locale} className={roboto.variable}>
       <body>

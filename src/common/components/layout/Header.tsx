@@ -1,6 +1,4 @@
-// src/components/layout/Header.tsx
-
-import NextLink from 'next/link'; // Next.jsのLinkをインポート
+import NextLink from 'next/link';
 import {
   AppBar,
   Toolbar,
@@ -14,16 +12,14 @@ import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 export default function Header() {
   return (
     <AppBar
-      position="sticky" // 画面上部に追従
+      position="sticky"
       sx={{
-        // ガラスエフェクトを適用
+        backgroundColor: 'rgba(255, 255, 255, 0.7)',
+        color: 'text.primary',
         backdropFilter: 'blur(10px)',
-        backgroundColor: 'rgba(255, 255, 255, 0.7)', // 背景を少し透過
-        color: 'text.primary', // 文字色をテーマのプライマリテキストカラーに
       }}
     >
       <Toolbar>
-        {/* サイトロゴ/タイトル (クリックでトップページへ) */}
         <Typography
           variant="h6"
           component={NextLink} // Next.jsのLinkとして機能させる
@@ -38,20 +34,13 @@ export default function Header() {
         </Typography>
 
         <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
-          {/* ナビゲーションリンク */}
-          <Button
-            component={NextLink} // Next.jsのLinkとして機能させる
-            href="/products"
-            color="inherit"
-          >
-            Products
+          <Button component={NextLink} href="/products" color="inherit">
+            商品
           </Button>
           <Button component={NextLink} href="/login" color="inherit">
-            Login
+            ログイン
           </Button>
         </Box>
-
-        {/* カートアイコン */}
         <IconButton component={NextLink} href="/cart" color="inherit">
           <ShoppingCartIcon />
         </IconButton>
