@@ -29,9 +29,9 @@ const eslintConfig = [
         'error',
         {
           name: 'next/link',
-          importNames: ['default'],
+          importNames: ['Link'],
           message:
-            '衝突を避けるため、\'import NextLink from "next/link"\' を使用してください。',
+            '衝突を避けるため、\'import { Link as NextLink } from from "next/link"\' を使用してください。',
         },
         {
           name: '@mui/material',

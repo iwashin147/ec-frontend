@@ -7,8 +7,7 @@ import {
   IconButton,
 } from '@mui/material';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import Link from '@/common/components/ui/input/Link';
-
+import NextLink from 'next/link';
 export default function Header() {
   return (
     <AppBar
@@ -22,7 +21,7 @@ export default function Header() {
       <Toolbar>
         <Typography
           variant="h6"
-          component={Link}
+          component={NextLink}
           href="/"
           sx={{
             flexGrow: 1,
@@ -34,14 +33,14 @@ export default function Header() {
         </Typography>
 
         <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
-          <Button component={Link} href="/products" color="inherit">
+          <Button component={NextLink} href="/products" color="inherit">
             商品
           </Button>
-          <Button component={Link} href="/login" color="inherit">
+          <Button component={NextLink} href="/login" color="inherit">
             ログイン
           </Button>
         </Box>
-        <IconButton component={Link} href="/cart" color="inherit">
+        <IconButton component={NextLink} href="/cart" color="inherit">
           <ShoppingCartIcon />
         </IconButton>
       </Toolbar>
