@@ -6,6 +6,7 @@ import eslintConfigPrettier from 'eslint-config-prettier';
 import perfectionistPlugin from 'eslint-plugin-perfectionist';
 import tailwindcssPlugin from 'eslint-plugin-tailwindcss';
 import prettierPlugin from 'eslint-plugin-prettier';
+import pluginQuery from '@tanstack/eslint-plugin-query';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -45,6 +46,7 @@ const eslintConfig = [
     },
   },
   ...compat.extends('next/typescript'),
+  ...pluginQuery.configs['flat/recommended'],
   {
     plugins: { perfectionist: perfectionistPlugin },
     rules: {

@@ -1,6 +1,7 @@
 import { type Metadata } from 'next';
 import React from 'react';
 import { Roboto } from 'next/font/google';
+import { AppProviders } from '@/common/components/AppProviders';
 
 const roboto = Roboto({
   weight: ['300', '400', '500', '700'],
@@ -23,7 +24,9 @@ export default async function RootLayout({
   return (
     <html lang="ja" className={roboto.variable}>
       <body>
-        <main>{children}</main>
+        <AppProviders>
+          <main>{children}</main>
+        </AppProviders>
       </body>
     </html>
   );
