@@ -4,5 +4,7 @@
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "explicit"
   },
+  "eslint.validate": ["javascript", "typescript", "typescriptreact", "html"],
+  "eslint.workingDirectories": [{ "mode": "auto" }],
   "eslint.nodePath": "./node_modules"
 }
