@@ -1,6 +1,3 @@
-import ThemeRegistry from '@/common/components/ThemeRegistry';
-import Header from '@/common/components/layout/Header';
-import Footer from '@/common/components/layout/Footer';
 import { type Metadata } from 'next';
 import React from 'react';
 import { Roboto } from 'next/font/google';
@@ -26,11 +23,7 @@ export default async function RootLayout({
   return (
     <html lang="ja" className={roboto.variable}>
       <body>
-        <ThemeRegistry>
-          <Header />
-          <main>{children}</main>
-          <Footer />
-        </ThemeRegistry>
+        <main>{children}</main>
       </body>
     </html>
   );
