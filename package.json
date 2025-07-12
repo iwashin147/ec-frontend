@@ -84,6 +84,8 @@
     "msw": "^2.10.3",
     "playwright": "^1.53.2",
     "prettier": "^3.6.2",
+    "prettier-plugin-classnames": "^0.8.1",
+    "prettier-plugin-merge": "^0.8.0",
     "prettier-plugin-tailwindcss": "^0.6.14",
     "tw-animate-css": "^1.3.5",
     "typescript": "^5",
