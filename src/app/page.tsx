@@ -1,5 +1,5 @@
 'use client';
-import AuthStatus from '@/common/components/AuthStatus';
+import AuthStatus from '@/features/auth/components/AuthStatus';
 import { Button } from '@/common/components/ui/button';
 import { useAuthStore } from '@/common/store/authStore';
 

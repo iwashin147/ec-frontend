@@ -1,11 +1,16 @@
 import { create } from 'zustand';
 
+/**
+ * User interface representing the authenticated user
+ */
 interface User {
   id: string;
   name: string;
   email: string;
 }
-
+/**
+ * Auth state interface
+ */
 interface AuthState {
   user: User | null;
   isAuthenticated: boolean;
@@ -13,6 +18,9 @@ interface AuthState {
   logout: () => void;
 }
 
+/**
+ * Zustand store for authentication state management
+ */
 export const useAuthStore = create<AuthState>((set) => ({
   user: null,
   isAuthenticated: false,
