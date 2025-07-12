@@ -1,14 +1,8 @@
 import { type Metadata } from 'next';
 import React from 'react';
-import { Roboto } from 'next/font/google';
 import { AppProviders } from '@/common/components/AppProviders';
-
-const roboto = Roboto({
-  weight: ['300', '400', '500', '700'],
-  subsets: ['latin'],
-  display: 'swap',
-  variable: '--font-roboto',
-});
+import { notoSansJP } from '@/common/fonts/font';
+import '@/app/global.css';
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -22,7 +16,7 @@ export default async function RootLayout({
   params: Promise<{ locale: string }>;
 }>) {
   return (
-    <html lang="ja" className={roboto.variable}>
+    <html lang="ja" className={notoSansJP.variable}>
       <body>
         <AppProviders>
           <main>{children}</main>
