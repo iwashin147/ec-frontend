@@ -16,7 +16,7 @@ export default async function RootLayout({
   params: Promise<{ locale: string }>;
 }>) {
   return (
-    <html lang="ja" className={notoSansJP.variable}>
+    <html lang="ja" className={notoSansJP.variable} suppressHydrationWarning>
       <body>
         <AppProviders>
           <main>{children}</main>

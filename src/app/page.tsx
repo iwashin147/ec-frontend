@@ -2,6 +2,7 @@
 import AuthStatus from '@/features/auth/components/AuthStatus';
 import { Button } from '@/common/components/ui/button';
 import { useAuthStore } from '@/common/store/authStore';
+import ThemeToggle from '@/common/components/input/ThemeToggle';
 
 export default function HomePage() {
   const loginUser = useAuthStore((state) => state.login);
@@ -16,7 +17,7 @@ export default function HomePage() {
 
   return (
     <div className="container mx-auto max-w-2xl p-4">
-      {' '}
+      <ThemeToggle />
       <h1 className="mb-10 text-center text-4xl font-extrabold">
         <span className="text-blue-600">EC</span> サイトへようこそ！
       </h1>
@@ -26,9 +27,7 @@ export default function HomePage() {
           {' '}
           <AuthStatus />
         </div>
-        <Button onClick={handleLogin} className="mt-4 px-6 py-3 text-lg">
-          テストログイン
-        </Button>
+        <Button onClick={handleLogin}>テストログイン</Button>
       </section>
       <section className="mt-12 text-center text-gray-600">
         <p>商品カテゴリや最新アイテムを探索してみましょう。</p>
