@@ -1,0 +1,157 @@
+{
+  "user": [
+    {
+      "id": "3a665e14-0fa5-489e-b8d9-304274f6a061",
+      "name": "管理者ユーザー",
+      "email": "admin@example.com",
+      "role": "管理者",
+      "initials": "AU",
+      "permissions": [
+        "product:read",
+        "product:create",
+        "product:update",
+        "product:delete",
+        "order:read",
+        "user:read",
+        "user:invite",
+        "coupon:read",
+        "coupon:create"
+      ]
+    }
+  ],
+  "product": [
+    {
+      "id": "27f1cb99-292a-43cc-ab99-cd1e1164beef",
+      "name": "高機能オフィスチェア",
+      "description": "[{\"type\":\"paragraph\",\"content\":\"最高の座り心地。\"}]",
+      "price": 79800,
+      "stock": 15,
+      "status": "販売中",
+      "createdAt": "2024-11-16T14:20:01.166Z",
+      "category": {
+        "id": "9e13c835-af43-4890-aa6b-3bb23eebebc8",
+        "name": "オフィスチェア",
+        "description": "",
+        "parent": {
+          "id": "49436cb6-8046-4648-9297-a076f6496afe",
+          "name": "オフィス家具",
+          "description": "",
+          "parent": null
+        }
+      },
+      "brand": {
+        "id": "22b07915-365a-4cff-b8e9-999c75480ce8",
+        "name": "Acme Corporation",
+        "website": "https://acme.com",
+        "description": ""
+      },
+      "images": []
+    }
+  ],
+  "image": [
+    {
+      "id": "24e66b37-17f8-4775-b7bb-2e1c2e0e9e6f",
+      "url": "https://loremflickr.com/3125/195/chair?lock=2014869685714734",
+      "order": 1,
+      "product": {
+        "id": "27f1cb99-292a-43cc-ab99-cd1e1164beef",
+        "name": "高機能オフィスチェア",
+        "description": "[{\"type\":\"paragraph\",\"content\":\"最高の座り心地。\"}]",
+        "price": 79800,
+        "stock": 15,
+        "status": "販売中",
+        "createdAt": "2024-11-16T14:20:01.166Z",
+        "category": {
+          "id": "9e13c835-af43-4890-aa6b-3bb23eebebc8",
+          "name": "オフィスチェア",
+          "description": "",
+          "parent": {
+            "id": "49436cb6-8046-4648-9297-a076f6496afe",
+            "name": "オフィス家具",
+            "description": "",
+            "parent": null
+          }
+        },
+        "brand": {
+          "id": "22b07915-365a-4cff-b8e9-999c75480ce8",
+          "name": "Acme Corporation",
+          "website": "https://acme.com",
+          "description": ""
+        },
+        "images": []
+      }
+    }
+  ],
+  "category": [
+    {
+      "id": "49436cb6-8046-4648-9297-a076f6496afe",
+      "name": "オフィス家具",
+      "description": "",
+      "parent": null
+    },
+    {
+      "id": "9e13c835-af43-4890-aa6b-3bb23eebebc8",
+      "name": "オフィスチェア",
+      "description": "",
+      "parent": {
+        "id": "49436cb6-8046-4648-9297-a076f6496afe",
+        "name": "オフィス家具",
+        "description": "",
+        "parent": null
+      }
+    }
+  ],
+  "brand": [
+    {
+      "id": "22b07915-365a-4cff-b8e9-999c75480ce8",
+      "name": "Acme Corporation",
+      "website": "https://acme.com",
+      "description": ""
+    }
+  ],
+  "order": [
+    {
+      "id": "BMHYO2KWAB",
+      "customerName": "田中 太郎",
+      "orderDate": "2025-07-13T03:13:39.974Z",
+      "status": "処理中",
+      "totalAmount": 79800,
+      "lineItems": [
+        {
+          "productId": "27f1cb99-292a-43cc-ab99-cd1e1164beef",
+          "productName": "高機能オフィスチェア",
+          "quantity": 1,
+          "price": 79800
+        }
+      ]
+    }
+  ],
+  "coupon": [],
+  "activityLog": [
+    {
+      "id": "0d1d4917-8aa4-4c8e-a745-6d683e4a6914",
+      "timestamp": "2025-07-13T03:13:39.974Z",
+      "action": "注文が作成されました。",
+      "targetType": "order",
+      "targetId": "BMHYO2KWAB",
+      "user": {
+        "id": "3a665e14-0fa5-489e-b8d9-304274f6a061",
+        "name": "管理者ユーザー",
+        "email": "admin@example.com",
+        "role": "管理者",
+        "initials": "AU",
+        "permissions": [
+          "product:read",
+          "product:create",
+          "product:update",
+          "product:delete",
+          "order:read",
+          "user:read",
+          "user:invite",
+          "coupon:read",
+          "coupon:create"
+        ]
+      }
+    }
+  ]
+}

@@ -3,6 +3,9 @@ import React from 'react';
 import { AppProviders } from '@/common/components/AppProviders';
 import { notoSansJP } from '@/common/fonts/font';
 import '@/app/global.css';
+import GlobalFooter from '@/common/components/layout/GlobalFooter';
+import GlobalHeader from '@/common/components/layout/GlobalHeader';
+import { MSWComponent } from '@/mocks/MSWComponent';
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -18,8 +21,11 @@ export default async function RootLayout({
   return (
     <html lang="ja" className={notoSansJP.variable} suppressHydrationWarning>
       <body>
+        {process.env.NODE_ENV === 'development' && <MSWComponent />}
         <AppProviders>
+          <GlobalHeader />
           <main>{children}</main>
+          <GlobalFooter />
         </AppProviders>
       </body>
     </html>

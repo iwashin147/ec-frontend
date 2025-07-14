@@ -1,5 +1,3 @@
-// src/lib/api/index.ts
-
 import { createApiClient } from '@/common/lib/api/client';
 import type { ApiClient } from '@/common/lib/api/apiTypes';
 
@@ -28,6 +26,4 @@ export const apiClient: ApiClient = createApiClient({
       );
     }
   },
-  // 将来的にAuth.jsと連携したトークンリフレッシュ機能をここに追加
-  // tokenRefresh: { ... }
 });

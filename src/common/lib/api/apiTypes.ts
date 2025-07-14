@@ -1,17 +1,27 @@
 import { StatusCodes } from 'http-status-codes';
 
+// APIから返される一般的なエラーレスポンスの型を定義
+
+export interface ApiErrorDetails {
+  code?: string;
+  message?: string;
+  fieldErrors?: { [key: string]: string[] };
+  [key: string]: unknown;
+}
+
 /**
  * API通信で発生したエラーに関する情報を保持するカスタムエラークラス。
  *
  * @param statusCode - HTTPステータスコード。
  * @param message - エラーメッセージ。
- * @param details - APIが返したエラーレスポンスのボディなど、詳細情報。
+ * @param details - APIが返したエラーレスポンスのボディ、またはその他の詳細情報。
  */
 export class ApiError extends Error {
   constructor(
     public readonly statusCode: StatusCodes,
     public readonly message: string,
-    public readonly details?: unknown,
+    // detailsの型を ApiErrorDetails または unknown に明確化
+    public readonly details?: ApiErrorDetails | unknown,
   ) {
     super(message);
     this.name = 'ApiError';
@@ -45,14 +55,14 @@ export type Result<T> = Success<T> | Failure;
 export interface ApiClient {
   delete<T>(path: string, options?: RequestInit): Promise<Result<T>>;
   get<T>(path: string, options?: RequestInit): Promise<Result<T>>;
-  post<T>(
+  post<T, B = unknown>(
     path: string,
-    body: unknown,
+    body: B,
     options?: RequestInit,
   ): Promise<Result<T>>;
-  put<T>(
+  put<T, B = unknown>(
     path: string,
-    body: unknown,
+    body: B,
     options?: RequestInit,
   ): Promise<Result<T>>;
 }
@@ -65,8 +75,8 @@ export type TokenRefreshConfig = {
   getAccessToken: () => Promise<string | null>;
   /** 取得したトークンからAuthorizationヘッダーを生成する関数。 */
   getAuthorizationHeader: (token: string) => Record<string, string>;
-  /** 新しいアクセストークンを取得するための非同期関数。 */
-  refreshToken: () => Promise<string | null>;
+  /** 新しいアクセストークンを取得するための非同期関数。成功時は新しいトークン、失敗時はnullまたはundefinedを返す。 */
+  refreshToken: () => Promise<string | null | undefined>; // nullまたはundefinedを許容
   /** リフレッシュ処理をトリガーするHTTPステータスコード (通常は401)。 */
   triggerStatusCode: StatusCodes.UNAUTHORIZED;
 };
@@ -91,6 +101,16 @@ export type RetryConfig = {
   shouldRetry?: (error: ApiError) => boolean;
 };
 
+// Next.js の `fetch` API に渡せる `next` オプションの型を定義。
+// これはNext.jsのバージョンや内部的な型定義によって異なる可能性があるため、必要に応じて調整してください。
+// 一般的なプロパティのみを記述しています。
+type NextFetchRequestConfig = {
+  revalidate?: number | false; // キャッシュ再検証の間隔 (秒) または無効化
+  tags?: string[]; // キャッシュタグ
+  // その他のNext.js固有のfetchオプションがあればここに追加
+  // 例: cache?: 'force-cache' | 'no-store' | 'only-if-cached' | 'default';
+};
+
 /**
  * APIクライアントファクトリー(`createApiClient`)の設定オブジェクト。
  */
@@ -98,7 +118,7 @@ export type ApiClientConfig = {
   /** 接続先APIのベースURL。 */
   baseUrl: string;
   /** Next.jsのfetchキャッシュに関するデフォルト設定。 */
-  defaultCacheOptions?: NextFetchRequestConfig;
+  defaultCacheOptions?: NextFetchRequestConfig; // 明確な型を使用
   /** 全てのリクエストに付与するデフォルトのヘッダー。 */
   defaultHeaders?: Record<string, string>;
   /** デフォルトの自動リトライ設定。 */

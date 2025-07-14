@@ -9,7 +9,7 @@ import {
   CardTitle,
 } from '@/common/components/ui/card';
 import { Button } from '@/common/components/ui/button';
-import { useAuthStore } from '@/common/store/authStore';
+import { useAuthStore } from '@/store/authStore';
 
 export default function AuthStatus() {
   const { user, isAuthenticated, logout } = useAuthStore();

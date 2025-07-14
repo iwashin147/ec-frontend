@@ -6,6 +6,7 @@ import {
   Failure,
   Result,
   RetryConfig,
+  ApiErrorDetails,
 } from '@/common/lib/api/apiTypes';
 
 /**
@@ -51,8 +52,7 @@ export function createApiClient({
 }: ApiClientConfig): ApiClient {
   /** 現在トークンをリフレッシュ中かどうかを示すフラグ。 */
   let isRefreshingToken = false;
-  /** トークンリフレッシュ操作のPromise。これにより、複数のリクエストが同時にトークンリフレッシュをトリガーするのを防ぎます。 */
-  let tokenRefreshPromise: Promise<string | null> | null = null;
+  let tokenRefreshPromise: Promise<string | null | undefined> | null = null;
 
   /**
    * `Response` オブジェクトを処理し、`Result` 型に変換する内部関数。
@@ -64,9 +64,23 @@ export function createApiClient({
    */
   const handleResponse = async <T>(response: Response): Promise<Result<T>> => {
     if (!response.ok) {
-      let details;
+      // 💡 修正: details の型を明確化
+      let details: ApiErrorDetails | unknown | undefined;
       try {
-        details = await response.json();
+        const jsonDetails = await response.json();
+        // JSONがApiErrorDetails型に適合するか簡易チェック
+        // これは厳密なバリデーションではないため、必要に応じてZodなどを使用
+        if (
+          typeof jsonDetails === 'object' &&
+          jsonDetails !== null &&
+          ('code' in jsonDetails ||
+            'message' in jsonDetails ||
+            'fieldErrors' in jsonDetails)
+        ) {
+          details = jsonDetails as ApiErrorDetails;
+        } else {
+          details = jsonDetails;
+        }
       } catch {
         details = await response.text();
       }
@@ -87,7 +101,6 @@ export function createApiClient({
    * `fetch`操作中に発生したJavaScriptのエラー（ネットワークエラー、AbortErrorなど）を処理し、`Failure`型に変換する内部関数。
    *
    * @param error - 捕捉されたエラーオブジェクト。
-   * @param path - リクエストが試行されたパス。
    * @returns エラー情報を含む`Failure`オブジェクト。
    */
   const handleCaughtError = async (error: unknown): Promise<Failure> => {
@@ -97,7 +110,7 @@ export function createApiClient({
         error: new ApiError(
           StatusCodes.REQUEST_TIMEOUT,
           'Request Aborted',
-          error,
+          error.message,
         ),
       };
     }
@@ -111,6 +124,7 @@ export function createApiClient({
         : new ApiError(
             StatusCodes.INTERNAL_SERVER_ERROR,
             'An unknown network error occurred',
+            String(error),
           );
     await onHttpError?.(apiError);
     return { ok: false, error: apiError };
@@ -137,7 +151,6 @@ export function createApiClient({
     for (let attempt = 0; attempt <= retryConfig.count; attempt++) {
       const controller = new AbortController();
       let timeoutId: NodeJS.Timeout | undefined;
-      // タイムアウトが設定されており、かつ`options.signal`が指定されていない場合、タイムアウトを設定
       if (defaultTimeout && !options.signal) {
         timeoutId = setTimeout(() => controller.abort(), defaultTimeout);
       }
@@ -150,13 +163,10 @@ export function createApiClient({
           accessToken && tokenRefresh
             ? tokenRefresh.getAuthorizationHeader(accessToken)
             : {};
-
-        // デフォルトヘッダー、認証ヘッダー、およびオプションのヘッダーを結合し、Headersオブジェクトを構築
         const mergedHeaders = new Headers({
           'Content-Type': 'application/json',
           ...defaultHeaders,
           ...authHeader,
-          // `options.headers`が`Headers`オブジェクトの場合、それをプレーンなオブジェクトに変換して結合
           ...(options.headers instanceof Headers
             ? Object.fromEntries(options.headers.entries())
             : options.headers),
@@ -176,7 +186,6 @@ export function createApiClient({
           tokenRefresh &&
           !mergedHeaders.get(IS_RETRY_HEADER) // 'X-Is-Retry' ヘッダーが存在しないかチェック
         ) {
-          // トークンリフレッシュがまだ行われていない場合
           if (!isRefreshingToken) {
             isRefreshingToken = true;
             // トークンリフレッシュを実行し、Promiseを保持。完了時にフラグとPromiseをリセット。
@@ -187,9 +196,14 @@ export function createApiClient({
           }
           // トークンリフレッシュが成功した場合、リトライヘッダーを追加してリクエストを再実行
           if (await tokenRefreshPromise) {
+            // ヘッダーを再構築してリトライヘッダーを追加
+            const retryHeaders: Record<string, string> = {
+              ...Object.fromEntries(mergedHeaders.entries()), // 現在のHeadersオブジェクトをプレーンなオブジェクトに変換
+              [IS_RETRY_HEADER]: 'true', // リトライヘッダーを追加
+            };
             return executeRequest<T>(path, {
               ...options,
-              headers: { ...options.headers, [IS_RETRY_HEADER]: 'true' }, // リトライヘッダーを追加
+              headers: retryHeaders, // リトライヘッダーを含む新しいヘッダーをセット
             });
           }
         }
@@ -222,6 +236,7 @@ export function createApiClient({
       error: new ApiError(
         StatusCodes.INTERNAL_SERVER_ERROR,
         'Retry logic failed unexpectedly',
+        'Max retries reached without success.', // 💡 修正: 詳細メッセージを追加
       ),
     };
   };
@@ -239,14 +254,13 @@ export function createApiClient({
     options: RequestInit,
   ): Promise<Result<T>> => {
     const startTime = Date.now();
-    onRequestStart?.(path); // リクエスト開始フックを呼び出す
+    onRequestStart?.(path);
     const result = await executeRequest<T>(path, options);
     const duration = Date.now() - startTime;
-    onRequestEnd?.(path, duration, result); // リクエスト終了フックを呼び出す
+    onRequestEnd?.(path, duration, result);
     return result;
   };
 
-  // ApiClientインターフェースの実装を返す
   return {
     /**
      * GETリクエストを実行します。
@@ -261,6 +275,7 @@ export function createApiClient({
      * POSTリクエストを実行します。
      *
      * @template T - 期待されるレスポンスボディの型。
+     * @template B - リクエストボディの型。
      * @param path - リクエストのパス。
      * @param body - リクエストボディとして送信するデータ。JSON文字列に変換されます。
      * @param [options] - `RequestInit`オプション。
@@ -272,6 +287,7 @@ export function createApiClient({
      * PUTリクエストを実行します。
      *
      * @template T - 期待されるレスポンスボディの型。
+     * @template B - リクエストボディの型。
      * @param path - リクエストのパス。
      * @param body - リクエストボディとして送信するデータ。JSON文字列に変換されます。
      * @param [options] - `RequestInit`オプション。
