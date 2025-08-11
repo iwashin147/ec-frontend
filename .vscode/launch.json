@@ -13,7 +13,8 @@
         "killOnServerStop": true,
         "pattern": "- Local:.+(https?://.+)",
         "uriFormat": "%s",
-        "webRoot": "${workspaceFolder}"
+        "webRoot": "${workspaceFolder}",
+        "userDataDir": "C:\\Users\\notim\\AppData\\Local\\Google\\Chrome\\User Data"
       }
     },
     {

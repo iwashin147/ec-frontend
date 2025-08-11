@@ -5,7 +5,6 @@ import nextPlugin from '@next/eslint-plugin-next';
 import eslintConfigPrettier from 'eslint-config-prettier';
 import perfectionistPlugin from 'eslint-plugin-perfectionist';
 import tailwindcssPlugin from 'eslint-plugin-tailwindcss';
-import prettierPlugin from 'eslint-plugin-prettier';
 import pluginQuery from '@tanstack/eslint-plugin-query';
 
 const __filename = fileURLToPath(import.meta.url);
